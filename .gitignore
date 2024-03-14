@@ -1,3 +1,7 @@
+# custom
+.jupyter/
+
+# nbdev
 _docs/
 _proc/
 
