@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "tableform"
+  site-url: "https://simonkeys.github.io/tableform"
+  description: "_repr_html_ for nested data"
+  repo-branch: main
+  repo-url: "https://github.com/simonkeys/tableform"
