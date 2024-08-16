@@ -24,7 +24,7 @@ def _is_pint_quantity(a):
     return str(a.__class__) == "<class 'pint.Quantity'>"
 
 # %% ../nbs/core.ipynb 6
-def _package(obj): return obj.__class__.__module__.split('.')[0]
+def _package(obj): return obj.__class__.__module__.split('.')[0].replace('__main__', '')
 
 # %% ../nbs/core.ipynb 7
 bracket_class = "table-form-bracketed"
@@ -33,7 +33,7 @@ empty_string = ''
 
 # %% ../nbs/core.ipynb 8
 class TableForm:
-    def __init__(self, a=None, fmt='.2f', border_color="Gray", width="auto", edgeitems='auto', font_size=12, padding=2):
+    def __init__(self, a=None, fmt='.2f', border_color="steelblue", width="auto", edgeitems='auto', font_size=12, padding=3):
         self.a = a
         self.fmt = fmt
         if border_color == 'auto':
@@ -47,7 +47,16 @@ class TableForm:
         self.edgeitems = edgeitems
         self.units = None
 
-    def table_tag(self, content, depth, brackets=False):
+    def table_tag(self, content, depth, brackets=False, as_div=False):
+        if as_div:
+            return (
+                (f'<div style="font-size:{self.font_size}px">{self.table_caption()}</div>' if depth == 0 else '') + 
+                f'<div style="' +
+                self.font_style() +
+                '">' +
+                content +
+                '</div>'
+            )
         return (
             (f'<div style="font-size:{self.font_size}px">{self.table_caption()}</div>' if depth == 0 else '') + 
             f'<table data-quarto-disable-processing="true" class="table-form {bracket_class if brackets else boxed_class}" style="display:inline-table; text-align:center;' +
@@ -143,7 +152,7 @@ class TableForm:
     
     def make_table(self, a, depth=0):
         if isinstance(a, str): raise TypeError
-        if hasattr(a, 'ndim') and a.ndim == 0: return self.table_tag(self.make_entry(a.item(), depth), depth, brackets=False) 
+        if hasattr(a, 'ndim') and a.ndim == 0: return self.table_tag(self.make_entry(a.item(), depth), depth, brackets=False, as_div=True) 
         try:
             return self.table_tag(self.make_rows(a, depth), depth, brackets=False)
         except:
